@@ -1,0 +1,22 @@
+#Test-testset
+
+base/bin/HCompV -A -D -V -T 1 -C lib/cfgs/cvn.cfg -p %%%%%%* -k %%%%%%%%%%%%%%%%%%%%%%???????%%_* -q v -S /home/dawna/ww368/data/test_5.fbk.scp  -c lib/info/cvn
+
+python forward/genFwdSCP.py /home/dawna/ww368/data/test_5.fbk.scp forward/data_test forward/test.out.scp
+
+qsub -cwd -l ubuntu=1 -l qp=cuda-low -l osrel="*" -P nst -j y -S /usr/bin/python3 base/tools/runcmd.py -vv -LOG forward/LOG_test forward/CMD
+
+base/bin/HList -h forward/data_test/
+
+python3 forward/CompAcc.py /home/dawna/ww368/data/fbk.mlf forward/data_test/  
+
+#Test-cvset
+base/bin/HCompV -A -D -V -T 1 -C lib/cfgs/cvn.cfg -p %%%%%%* -k %%%%%%%%%%%%%%%%%%%%%%???????%%_* -q v -S lib/flists/cv.scp -c lib/info/cvn
+
+python forward/genFwdSCP.py lib/flists/cv.scp  forward/data_cv forward/cv.out.scp
+
+qsub -cwd -l ubuntu=1 -l qp=cuda-low -l osrel="*" -P nst -j y -S /usr/bin/python3 base/tools/runcmd.py -vv -LOG forward/LOG_cv forward/CMD
+
+base/bin/HList -h forward/data_cv/
+
+python3 forward/CompAcc.py /home/dawna/ww368/data/fbk.mlf forward/data_cv/  
